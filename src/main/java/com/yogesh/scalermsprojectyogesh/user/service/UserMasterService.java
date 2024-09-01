@@ -15,12 +15,12 @@ import org.springframework.stereotype.Service;
 public class UserMasterService implements UserDetailsService , CrudService<UserMaster> {
 
     private UserMasterRepository userMasterRepository;
-    @Autowired
     private PasswordEncoder passwordEncoder;
 
     @Autowired
-    public UserMasterService(UserMasterRepository userMasterRepository) {
+    public UserMasterService(UserMasterRepository userMasterRepository, PasswordEncoder passwordEncoder) {
         this.userMasterRepository = userMasterRepository;
+        this.passwordEncoder = passwordEncoder;
     }
 
     @Override
