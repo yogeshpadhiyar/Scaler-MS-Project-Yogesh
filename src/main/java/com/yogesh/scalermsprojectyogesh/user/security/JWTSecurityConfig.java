@@ -1,6 +1,7 @@
-package com.yogesh.scalermsprojectyogesh.config;
+package com.yogesh.scalermsprojectyogesh.user.security;
 
 import com.yogesh.scalermsprojectyogesh.user.service.JwtAuthorizationFilter;
+import com.yogesh.scalermsprojectyogesh.user.service.UserMasterService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -20,16 +21,13 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 
 @Configuration
 @EnableWebSecurity
-@EnableMethodSecurity(prePostEnabled = true)
+@EnableMethodSecurity
 public class JWTSecurityConfig{
 
-    private JwtAuthorizationFilter jwtAuthorizationFilter;
-    private UserDetailsService userDetailsService;
+    private final JwtAuthorizationFilter jwtAuthorizationFilter;
 
-    @Autowired
-    public JWTSecurityConfig(JwtAuthorizationFilter jwtAuthorizationFilter, UserDetailsService userDetailsService) {
+    public JWTSecurityConfig(JwtAuthorizationFilter jwtAuthorizationFilter) {
         this.jwtAuthorizationFilter = jwtAuthorizationFilter;
-        this.userDetailsService = userDetailsService;
     }
 
     @SuppressWarnings("removal")
@@ -55,9 +53,14 @@ public class JWTSecurityConfig{
     @Bean
     public AuthenticationProvider authenticationProvider() {
         DaoAuthenticationProvider daoAuthenticationProvider = new DaoAuthenticationProvider();
-        daoAuthenticationProvider.setUserDetailsService(userDetailsService);
+        daoAuthenticationProvider.setUserDetailsService(userDetailsService());
         daoAuthenticationProvider.setPasswordEncoder(passwordEncoder());
         return daoAuthenticationProvider;
+    }
+
+    @Bean
+    public UserDetailsService userDetailsService(){
+        return new UserMasterService();
     }
 
     @Bean
