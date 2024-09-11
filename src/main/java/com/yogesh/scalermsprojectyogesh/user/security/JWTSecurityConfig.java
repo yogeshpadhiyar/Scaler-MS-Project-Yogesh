@@ -1,3 +1,4 @@
+/*
 package com.yogesh.scalermsprojectyogesh.user.security;
 
 import com.yogesh.scalermsprojectyogesh.user.service.JwtAuthorizationFilter;
@@ -18,10 +19,12 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 
 @Configuration
 @EnableWebSecurity
 @EnableMethodSecurity
+@EnableWebMvc
 public class JWTSecurityConfig{
 
     private final JwtAuthorizationFilter jwtAuthorizationFilter;
@@ -30,24 +33,46 @@ public class JWTSecurityConfig{
         this.jwtAuthorizationFilter = jwtAuthorizationFilter;
     }
 
-    @SuppressWarnings("removal")
+//    @SuppressWarnings("removal")
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-        return http.csrf()
+        http
+                .csrf(csrf -> csrf.disable()) // Disable CSRF for simplicity in this example
+                .authorizeHttpRequests(authorize -> authorize
+//                        .requestMatchers("/financialManagement/welcome","/user/registerUser", "/user/generateToken").permitAll()  // Public endpoints
+//                        .requestMatchers("/user/updateUser").hasRole("USER")  // Admin-specific endpoints
+                        .anyRequest().permitAll()  // All other endpoints require authentication
+                )
+                .httpBasic();  // Or JWT-based authentication if using JWT
+
+        return http.build();
+        */
+/*http.cors().disable();
+        http.csrf()
                 .disable()
                 .authorizeHttpRequests()
-                .requestMatchers("/welcome","/user/*")
+                .requestMatchers("/financialManagement/welcome","/user/registerUser", "/user/generateToken")
                 .permitAll()
                 .and()
                 .authorizeHttpRequests()
-                .requestMatchers("/api/*")
+                .requestMatchers("/user/updateUser","/user/{id}", "/user/{username}")
                 .authenticated()
                 .and()
                 .sessionManagement()
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
                 .authenticationProvider(authenticationProvider())
-                .addFilterBefore(jwtAuthorizationFilter, UsernamePasswordAuthenticationFilter.class).build();
+                .addFilterBefore(jwtAuthorizationFilter, UsernamePasswordAuthenticationFilter.class);
+        return http.build();*//*
+
+        */
+/*http.cors().disable();
+        http.csrf().disable();
+        http.authorizeRequests(authorize -> authorize.requestMatchers("/financialManagement/welcome","/user/registerUser").permitAll());
+        http.authorizeRequests(authorize -> authorize.anyRequest().authenticated());
+        http.addFilterBefore(jwtAuthorizationFilter, UsernamePasswordAuthenticationFilter.class);
+        return http.build();*//*
+
     }
 
     @Bean
@@ -73,3 +98,4 @@ public class JWTSecurityConfig{
         return config.getAuthenticationManager();
     }
 }
+*/

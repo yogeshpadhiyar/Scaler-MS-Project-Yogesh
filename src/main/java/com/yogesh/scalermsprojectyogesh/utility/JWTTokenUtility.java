@@ -1,7 +1,8 @@
+/*
 package com.yogesh.scalermsprojectyogesh.utility;
 
 import com.yogesh.scalermsprojectyogesh.user.model.UserDetailsImpl;
-import com.yogesh.scalermsprojectyogesh.user.model.UserMaster;
+import com.yogesh.scalermsprojectyogesh.user.model.entity.UserMaster;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 
@@ -22,21 +23,25 @@ public class JWTTokenUtility {
     public static final String SECRET =
             "5367566B59703373367639792F423F4528482B4D6251655468576D5A71347437";
 
-    /**
+    */
+/**
      * @param userName
      * @return
-     */
+     *//*
+
     public String generateToken(String userName) {
 
         Map<String, Object> claims = new HashMap<>();
         return createToken(claims, userName);
     }
 
-    /**
+    */
+/**
      * @param claims
      * @param userName
      * @return
-     */
+     *//*
+
     private String createToken(Map<String, Object> claims, String userName) {
 
         return Jwts.builder()
@@ -48,49 +53,59 @@ public class JWTTokenUtility {
                 .compact();
     }
 
-    /**
+    */
+/**
      * @return
-     */
+     *//*
+
     private Key getSignKey() {
 
         byte[] keyBytes = Decoders.BASE64.decode(SECRET);
         return Keys.hmacShaKeyFor(keyBytes);
     }
 
-    /**
+    */
+/**
      * @param token
      * @return
-     */
+     *//*
+
     public String extractUsername(String token) {
 
         return extractClaim(token, Claims::getSubject);
     }
 
-    /**
+    */
+/**
      * @param token
      * @return
-     */
+     *//*
+
     public Date extractExpiration(String token) {
 
         return extractClaim(token, Claims::getExpiration);
     }
 
-    /**
+    */
+/**
      * @param <T>
      * @param token
      * @param claimsResolver
      * @return
-     */
+     *//*
+
     public <T> T extractClaim(String token, Function<Claims, T> claimsResolver) {
 
         final Claims claims = extractAllClaims(token);
         return claimsResolver.apply(claims);
     }
 
-    /**
+    */
+/**
      * @param token
      * @return
-     */
+     *//*
+
     private Claims extractAllClaims(String token) {
 
         return Jwts.parserBuilder()
@@ -100,20 +115,24 @@ public class JWTTokenUtility {
                 .getBody();
     }
 
-    /**
+    */
+/**
      * @param token
      * @return
-     */
+     *//*
+
     private Boolean isTokenExpired(String token) {
 
         return extractExpiration(token).before(new Date());
     }
 
-    /**
+    */
+/**
      * @param token
      * @param userDetails
      * @return
-     */
+     *//*
+
     public Boolean validateToken(String token, UserDetails userDetails) {
 
         final String username = extractUsername(token);
@@ -121,3 +140,4 @@ public class JWTTokenUtility {
     }
 
 }
+*/

@@ -3,13 +3,14 @@ package com.yogesh.scalermsprojectyogesh.model;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.persistence.*;
 import lombok.Data;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 import org.springframework.data.annotation.CreatedBy;
-import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedBy;
-import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
-import java.util.Date;
+import java.io.Serializable;
+import java.time.Instant;
 
 @MappedSuperclass
 @Data
@@ -21,15 +22,15 @@ public abstract class BaseModel {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @CreatedDate
+    @CreationTimestamp
     @Column(nullable = false,updatable = false)
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = DATE_FORMAT_UTC_TIMEZONE, timezone = "IST")
-    private Date created;
+    private Instant created;
 
-    @LastModifiedDate
+    @UpdateTimestamp
     @Column(nullable = false)
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = DATE_FORMAT_UTC_TIMEZONE, timezone = "IST")
-    private Date updated;
+    private Instant updated;
 
     @CreatedBy
     private String createdBy;

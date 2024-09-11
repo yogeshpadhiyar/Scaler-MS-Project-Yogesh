@@ -1,3 +1,4 @@
+/*
 package com.yogesh.scalermsprojectyogesh.user.model;
 
 import org.springframework.security.core.GrantedAuthority;
@@ -36,3 +37,4 @@ public class UserDetailsImpl implements UserDetails {
         return this.username;
     }
 }
+*/

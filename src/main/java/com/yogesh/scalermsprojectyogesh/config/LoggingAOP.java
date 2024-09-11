@@ -12,7 +12,7 @@ import java.util.Arrays;
 @Slf4j
 public class LoggingAOP {
 
-    @Before(value = "execution(* com.yogesh.scalermsprojectyogesh..*(..))")
+    @Before(value = "execution(* com.yogesh.scalermsprojectyogesh..*(..)) && !execution(* com.yogesh.scalermsprojectyogesh.user.service.*.*(..))")
     public void logBefore(JoinPoint joinPoint) {
         Object[] args = joinPoint.getArgs();
         String methodName = joinPoint.getSignature().getName();
@@ -22,7 +22,7 @@ public class LoggingAOP {
         }
     }
 
-    @After(value = "execution(* com.yogesh.scalermsprojectyogesh..*(..))")
+    @After(value = "execution(* com.yogesh.scalermsprojectyogesh..*(..)) && !execution(* com.yogesh.scalermsprojectyogesh.user.service.*.*(..))")
     public void logAfter(JoinPoint joinPoint, Object result) {
         String methodName = joinPoint.getSignature().getName();
         String className = joinPoint.getTarget().getClass().getName();
@@ -31,7 +31,7 @@ public class LoggingAOP {
         }
     }
 
-    @AfterReturning(value = "execution(* com.yogesh.scalermsprojectyogesh..*(..))", returning = "result")
+    @AfterReturning(value = "execution(* com.yogesh.scalermsprojectyogesh..*(..)) && !execution(* com.yogesh.scalermsprojectyogesh.user.service.*.*(..))", returning = "result")
     public void logAfterReturning(JoinPoint joinPoint, Object result) {
         String methodName = joinPoint.getSignature().getName();
         String className = joinPoint.getTarget().getClass().getName();
@@ -40,7 +40,7 @@ public class LoggingAOP {
         }
     }
 
-    @AfterThrowing(value = "execution(* com.yogesh.scalermsprojectyogesh..*(..))", throwing = "exception")
+    @AfterThrowing(value = "execution(* com.yogesh.scalermsprojectyogesh..*(..)) && !execution(* com.yogesh.scalermsprojectyogesh.user.service.*.*(..))", throwing = "exception")
     public void logAfterException(JoinPoint joinPoint, Throwable exception) {
         String methodName = joinPoint.getSignature().getName();
         String className = joinPoint.getTarget().getClass().getName();
