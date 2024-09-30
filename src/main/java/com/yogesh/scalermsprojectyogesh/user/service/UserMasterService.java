@@ -3,9 +3,9 @@ package com.yogesh.scalermsprojectyogesh.user.service;
 import com.yogesh.scalermsprojectyogesh.exception.CustomUsernameNotFoundException;
 import com.yogesh.scalermsprojectyogesh.service.CrudService;
 import com.yogesh.scalermsprojectyogesh.user.model.UserMasterBean;
-import com.yogesh.scalermsprojectyogesh.user.model.entity.FamilyMaster;
+import com.yogesh.scalermsprojectyogesh.family.model.entity.FamilyMaster;
 import com.yogesh.scalermsprojectyogesh.user.model.entity.UserMaster;
-import com.yogesh.scalermsprojectyogesh.user.repository.FamilyMasterRepository;
+import com.yogesh.scalermsprojectyogesh.family.repository.FamilyMasterRepository;
 import com.yogesh.scalermsprojectyogesh.user.repository.RoleRepository;
 import com.yogesh.scalermsprojectyogesh.user.repository.UserMasterRepository;
 import com.yogesh.scalermsprojectyogesh.utility.AppConstant;
@@ -40,20 +40,22 @@ public class UserMasterService implements CrudService<UserMasterBean> {
             throw new CustomUsernameNotFoundException(AppConstant.USERNAME_FOUNT+userMasterBean.getUsername());
         }
         if(userMasterRepository.findByEmailId(userMasterBean.getEmailId()).isPresent()){
-            throw new CustomUsernameNotFoundException(AppConstant.EMAILID_FOUNT_IN_USER+userMasterBean.getEmailId());
+            throw new CustomUsernameNotFoundException(AppConstant.EMAIL_ID_FOUNT_IN_USER +userMasterBean.getEmailId());
         }
+        UserMaster userMaster = userMasterBean.createEntityBean();
         Optional<FamilyMaster> familyMasterOpt =  familyMasterRepository.findByFamilyName(userMasterBean.getFamilyName());
         FamilyMaster familyMaster;
         if(userMasterBean.getIsParentOfFamily() && familyMasterOpt.isPresent()){
             throw new CustomUsernameNotFoundException(AppConstant.FAMILY_NAME_FOUNT+userMasterBean.getFamilyName());
-        }else if(userMasterBean.getIsParentOfFamily() && !familyMasterOpt.isPresent()){
+        }else if(userMasterBean.getIsParentOfFamily()){
             familyMaster = familyMasterRepository.save(FamilyMaster.builder().familyName(userMasterBean.getFamilyName()).build());
-        }else if (!userMasterBean.getIsParentOfFamily() && !familyMasterOpt.isPresent()){
+        }else if (familyMasterOpt.isEmpty()){
             throw new CustomUsernameNotFoundException(AppConstant.FAMILY_NAME_NOT_FOUNT+userMasterBean.getFamilyName());
         }else{
             familyMaster = familyMasterOpt.get();
+            userMaster.setParentUser(familyMaster.getUsers().stream().filter(UserMaster::getIsParentOfFamily).findFirst().get());
         }
-        UserMaster userMaster = userMasterBean.createEntityBean();
+
         userMaster.setRoles(roleRepository.findAllByRoleNameIn(userMasterBean.getRoles()));
         userMaster.setFamily(familyMaster);
         return userMasterRepository.save(userMaster).createResponseBean();

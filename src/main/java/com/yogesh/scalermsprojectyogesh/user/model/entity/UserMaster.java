@@ -1,13 +1,12 @@
 package com.yogesh.scalermsprojectyogesh.user.model.entity;
 
+import com.yogesh.scalermsprojectyogesh.family.model.entity.FamilyMaster;
 import com.yogesh.scalermsprojectyogesh.model.BaseModel;
-import com.yogesh.scalermsprojectyogesh.service.RequestMapper;
 import com.yogesh.scalermsprojectyogesh.service.ResponseMapper;
 import com.yogesh.scalermsprojectyogesh.user.model.UserMasterBean;
 import jakarta.persistence.*;
 import lombok.*;
 
-import java.util.List;
 import java.util.Set;
 
 @Data
@@ -35,6 +34,11 @@ public class UserMaster extends BaseModel implements  ResponseMapper<UserMasterB
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "family_id")
     private FamilyMaster family;
+
+    @ManyToOne
+    @JoinColumn(name = "parent_user_id")
+    private UserMaster parentUser;
+
     private Boolean isParentOfFamily;
 
     @Override
