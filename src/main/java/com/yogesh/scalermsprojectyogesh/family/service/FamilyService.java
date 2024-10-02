@@ -29,6 +29,20 @@ public class FamilyService implements CrudService<FamilyMasterBean> {
         throw new HttpRequestMethodNotSupportedException(AppConstant.METHOD_NOT_SUPPORT_EXCEPTION);
     }
 
+
+    public FamilyMasterBean addFamilyFund(FamilyMasterBean familyMasterBean) throws Exception {
+        if(familyMasterBean.getFamilyFund().doubleValue()<0){
+            throw new FamilyModuleException(AppConstant.FAMILY_FUND_SHOULD_NOT_NEGATIVE);
+        }
+        Optional<FamilyMaster> familyMasterOpt = familyMasterRepository.findById(familyMasterBean.getId());
+        if(familyMasterOpt.isEmpty())   throw new FamilyModuleException(AppConstant.FAMILY_ID_NOT_FOUNT+familyMasterBean.getId());
+
+        familyMasterBean.setAvailableFamilyFund(familyMasterBean.getFamilyFund());
+        familyMasterRepository.updateById(familyMasterBean.getId(), familyMasterBean.getFamilyFund(), familyMasterBean.getAvailableFamilyFund());
+        entityManager.clear();
+        return familyMasterRepository.findById(familyMasterBean.getId()).get().createResponseBean();
+    }
+
     @Override
     public FamilyMasterBean readById(Long id) throws Exception {
         return familyMasterRepository.findById(id).orElseThrow(()-> new FamilyModuleException(AppConstant.FAMILY_ID_NOT_FOUNT+id)).createResponseBean();
@@ -36,15 +50,16 @@ public class FamilyService implements CrudService<FamilyMasterBean> {
 
     @Override
     public FamilyMasterBean update(FamilyMasterBean familyMasterBean) throws Exception {
-        if(familyMasterBean.getFamilyFund()<0){
-            throw new FamilyModuleException(AppConstant.FAMILY_FUND_SHOULD_NOT_NEGATIVE);
-        }
         Optional<FamilyMaster> familyMasterOpt = familyMasterRepository.findById(familyMasterBean.getId());
         if(familyMasterOpt.isEmpty())   throw new FamilyModuleException(AppConstant.FAMILY_ID_NOT_FOUNT+familyMasterBean.getId());
-
-        familyMasterRepository.updateById(familyMasterBean.getId(), familyMasterBean.getFamilyFund());
+        FamilyMaster familyMaster = familyMasterOpt.get();
+        if(familyMasterBean.getAddAdditionalFund()!=null) {
+            familyMaster.setFamilyFund(familyMaster.getFamilyFund().add(familyMasterBean.getAddAdditionalFund()));
+            familyMaster.setAvailableFamilyFund(familyMaster.getAvailableFamilyFund().add(familyMasterBean.getAddAdditionalFund()));
+        }
+        familyMasterRepository.updateById(familyMaster.getId(), familyMaster.getFamilyFund(), familyMaster.getAvailableFamilyFund());
         entityManager.clear();
-        return familyMasterRepository.findById(familyMasterBean.getId()).get().createResponseBean();
+        return familyMasterRepository.findById(familyMaster.getId()).get().createResponseBean();
     }
 
     @Override

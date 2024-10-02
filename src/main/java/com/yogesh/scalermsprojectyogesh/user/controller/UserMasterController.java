@@ -65,7 +65,6 @@ public class UserMasterController {
         return ResponseEntity.ok(AppConstant.DELETE_USER);
     }
 
-    //TODO: exception handling only messeage has to come.
-    //TODO: Role handling
-    //TODO: userMaster improve with family member associate.
+    //TODO: User add into family member API
+
 }

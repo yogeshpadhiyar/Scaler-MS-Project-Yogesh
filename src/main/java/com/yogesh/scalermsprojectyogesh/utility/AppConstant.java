@@ -11,4 +11,7 @@ public class AppConstant {
     public static final String FAMILY_ID_NOT_FOUNT = "Family not found with family id:: ";
     public static final String FAMILY_FUND_SHOULD_NOT_NEGATIVE = "Family fund should not negative";
     public static final String METHOD_NOT_SUPPORT_EXCEPTION = "This method is not supported.";
+    public static final String USER_FUND_ID_NOT_FOUNT = "User fund not found with id:: ";
+    public static final String USER_FUND_NOT_ALLOT = "User fund not allot for id :: ";
+    public static final String USER_NOT_FOUND_INTO_FAMILY = "Member not found into given family";
 }

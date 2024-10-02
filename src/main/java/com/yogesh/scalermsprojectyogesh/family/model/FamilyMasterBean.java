@@ -7,6 +7,7 @@ import com.yogesh.scalermsprojectyogesh.user.model.UserMasterBean;
 import lombok.Builder;
 import lombok.Data;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -19,7 +20,9 @@ public class FamilyMasterBean implements RequestMapper<FamilyMaster> {
     private long id;
     private String familyName;
     private List<UserMasterBean> familyMembers;
-    private Double familyFund;
+    private BigDecimal familyFund;
+    private BigDecimal availableFamilyFund;
+    private BigDecimal addAdditionalFund;
 
     @Override
     public FamilyMaster createEntityBean() {

@@ -35,7 +35,7 @@ public class UserMaster extends BaseModel implements  ResponseMapper<UserMasterB
     @JoinColumn(name = "family_id")
     private FamilyMaster family;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "parent_user_id")
     private UserMaster parentUser;
 

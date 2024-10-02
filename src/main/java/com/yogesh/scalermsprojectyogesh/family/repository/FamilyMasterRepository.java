@@ -8,6 +8,7 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.math.BigDecimal;
 import java.util.Optional;
 
 @Repository
@@ -16,6 +17,6 @@ public interface FamilyMasterRepository extends JpaRepository<FamilyMaster, Long
 
     @Transactional
     @Modifying
-    @Query(value = "Update FamilyMaster fm set fm.familyFund = :familyFund where fm.id = :id")
-    void updateById(@Param(value = "id") Long id, @Param(value = "familyFund") Double familyFund);
+    @Query(value = "Update FamilyMaster fm set fm.familyFund = :familyFund, fm.availableFamilyFund = :availableFamilyFund where fm.id = :id")
+    void updateById(@Param(value = "id") Long id, @Param(value = "familyFund") BigDecimal familyFund, @Param(value = "availableFamilyFund") BigDecimal availableFamilyFund);
 }
