@@ -65,4 +65,8 @@ public class UserFundService implements CrudService<UserFundBean> {
     public UserFundBean readByUserId(Long userId) throws Exception {
         return userFundRepository.findByUserId(userId).orElseThrow(()-> new UserFundModuleException(AppConstant.USER_FUND_NOT_ALLOT+userId)).createResponseBean();
     }
+
+    public UserFundBean updateAvailableAmountById(UserFundBean userFundBean) throws Exception {
+        return userFundRepository.updateAvailableAmountByUserId(userFundBean.getUserId(), userFundBean.getAvailableAmount()).createResponseBean();
+    }
 }

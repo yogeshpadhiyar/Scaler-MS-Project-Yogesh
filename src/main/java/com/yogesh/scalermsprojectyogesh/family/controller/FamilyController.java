@@ -49,4 +49,9 @@ public class FamilyController {
     public ResponseEntity<UserFundBean> getFundByUserId(@PathVariable Long id) throws Exception {
         return new ResponseEntity<>(userFundService.readByUserId(id), HttpStatus.OK);
     }
+
+    @PostMapping("/memberFundUpdate")
+    public ResponseEntity<UserFundBean> memberFundUpdate(@RequestBody UserFundBean userFundBean) throws Exception {
+        return ResponseEntity.ok(userFundService.updateAvailableAmountById(userFundBean));
+    }
 }

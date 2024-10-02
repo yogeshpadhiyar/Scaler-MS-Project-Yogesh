@@ -14,4 +14,5 @@ public class AppConstant {
     public static final String USER_FUND_ID_NOT_FOUNT = "User fund not found with id:: ";
     public static final String USER_FUND_NOT_ALLOT = "User fund not allot for id :: ";
     public static final String USER_NOT_FOUND_INTO_FAMILY = "Member not found into given family";
+    public static final String CATEGORY_TOTALFUND_GREATERTHAN_AVAILABLEFUND = "User don't have available fund to allocate this category.";
 }
