@@ -7,6 +7,7 @@ import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Table;
 import lombok.*;
+import org.hibernate.annotations.ColumnDefault;
 
 import java.math.BigDecimal;
 
@@ -24,16 +25,18 @@ public class Category extends BaseModel implements ResponseMapper<CategoryBean> 
     private Long familyId;
     @Column(nullable = false)
     private Long userId;
-    @Column(nullable = false)
+    @Column(unique = true, nullable = false)
     private String name;
     private String description;
     private BigDecimal totalFund;
     private BigDecimal availableFund;
-    private Boolean active = true;
+    @ColumnDefault(value = "true")
+    private Boolean active;
 
     @Override
     public CategoryBean createResponseBean() {
         return CategoryBean.builder()
+                .categoryId(this.getId())
                 .parentCategoryId(parentCategoryId)
                 .familyId(familyId)
                 .userId(userId)

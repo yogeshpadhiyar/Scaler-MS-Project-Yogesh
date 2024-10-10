@@ -4,13 +4,13 @@ import com.yogesh.scalermsprojectyogesh.category.model.CategoryBean;
 import com.yogesh.scalermsprojectyogesh.category.service.CategoryService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @Slf4j
-@RestController("/category")
+@RestController
+@RequestMapping("/category")
 public class CategoryController {
 
     @Autowired
@@ -23,7 +23,12 @@ public class CategoryController {
     }
 
 
-    //TODO: assign fund to category
+    //TODO: assign fund to category by categoryId
+    @PutMapping("/updateCategoryFund")
+    public ResponseEntity<CategoryBean> updateCategoryFundById(@RequestBody CategoryBean categoryBean) throws Exception {
+        return new ResponseEntity<>(categoryService.update(categoryBean), HttpStatus.ACCEPTED);
+    }
+
     //read category by id
     //read all categories by User id
     //read all categories by family id

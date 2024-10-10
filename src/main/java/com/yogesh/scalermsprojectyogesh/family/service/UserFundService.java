@@ -39,7 +39,7 @@ public class UserFundService implements CrudService<UserFundBean> {
         if(familyMaster.getUsers().stream().filter(um -> um.getId().equals(userFund.getFundAssignerUserId())).count()!=1){
             throw new UserFundModuleException(AppConstant.USER_NOT_FOUND_INTO_FAMILY);
         }
-
+        if(userFund.getTotalFundAmount()!=null)     userFund.setAvailableAmount(userFund.getTotalFundAmount());
         userFundBean = userFundRepository.saveAndFlush(userFund).createResponseBean();
         //Decrease family available fund
         familyMaster.setAvailableFamilyFund(familyMaster.getAvailableFamilyFund().subtract(userFundBean.getTotalFundAmount()));
@@ -66,7 +66,8 @@ public class UserFundService implements CrudService<UserFundBean> {
         return userFundRepository.findByUserId(userId).orElseThrow(()-> new UserFundModuleException(AppConstant.USER_FUND_NOT_ALLOT+userId)).createResponseBean();
     }
 
-    public UserFundBean updateAvailableAmountById(UserFundBean userFundBean) throws Exception {
-        return userFundRepository.updateAvailableAmountByUserId(userFundBean.getUserId(), userFundBean.getAvailableAmount()).createResponseBean();
+    public String updateAvailableAmountById(UserFundBean userFundBean) throws Exception {
+        Integer affectedUsers =  userFundRepository.updateAvailableAmountByUserId(userFundBean.getUserId(), userFundBean.getAvailableAmount());
+        return AppConstant.FAMILY_AFFECTED_USERS+affectedUsers;
     }
 }

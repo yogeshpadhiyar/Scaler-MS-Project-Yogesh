@@ -1,6 +1,7 @@
 package com.yogesh.scalermsprojectyogesh.category.service;
 
 import com.yogesh.scalermsprojectyogesh.category.model.CategoryBean;
+import com.yogesh.scalermsprojectyogesh.category.model.entity.Category;
 import com.yogesh.scalermsprojectyogesh.category.repository.CategoryRepository;
 import com.yogesh.scalermsprojectyogesh.exception.CategoryModuleException;
 import com.yogesh.scalermsprojectyogesh.exception.CustomUsernameNotFoundException;
@@ -38,7 +39,6 @@ public class CategoryService implements CrudService<CategoryBean> {
         if(categoryBean.getTotalFund()!=null){
             categoryBean.setAvailableFund(categoryBean.getTotalFund());
         }
-        CategoryBean outputBean = categoryRepository.save(categoryBean.createEntityBean()).createResponseBean();
 
         //update user available fund
         UserFundBean userFundBean = userFundRepository.findByUserId(categoryBean.getUserId()).orElseThrow(()-> new UserFundModuleException(AppConstant.USER_FUND_NOT_ALLOT+categoryBean.getUserId())).createResponseBean();
@@ -48,6 +48,8 @@ public class CategoryService implements CrudService<CategoryBean> {
             throw new CategoryModuleException(AppConstant.CATEGORY_TOTALFUND_GREATERTHAN_AVAILABLEFUND);
         }
         userFundRepository.updateAvailableAmountByUserId(categoryBean.getUserId(), userFundBean.getAvailableAmount());
+        categoryBean.setActive(true);
+        CategoryBean outputBean = categoryRepository.save(categoryBean.createEntityBean()).createResponseBean();
         return outputBean;
     }
 
@@ -57,7 +59,8 @@ public class CategoryService implements CrudService<CategoryBean> {
     }
 
     @Override
-    public CategoryBean update(CategoryBean category) throws Exception {
+    public CategoryBean update(CategoryBean categoryBean) throws Exception {
+        Category category = categoryRepository.findById(categoryBean.getCategoryId())
         return null;
     }
 

@@ -20,6 +20,6 @@ public interface UserFundRepository extends JpaRepository<UserFund, Long> {
 
     @Transactional
     @Modifying
-    @Query("UPDATE UserFund uf set uf.availableAmount = : availableAmount where uf.userId = : userId")
-    UserFund updateAvailableAmountByUserId(@Param(value = "userId") Long userId, @Param(value = "availableAmount") BigDecimal availableAmount);
+    @Query("UPDATE UserFund uf set uf.availableAmount = :availableAmount where uf.userId = :userId")
+    Integer updateAvailableAmountByUserId(@Param(value = "userId") Long userId, @Param(value = "availableAmount") BigDecimal availableAmount);
 }

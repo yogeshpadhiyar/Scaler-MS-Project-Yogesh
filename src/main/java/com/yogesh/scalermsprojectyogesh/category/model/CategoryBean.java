@@ -12,6 +12,8 @@ import java.math.BigDecimal;
 @Builder
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class CategoryBean implements RequestMapper<Category> {
+
+    private Long categoryId;
     private Long parentCategoryId;
     private Long familyId;
     private Long userId;
@@ -19,7 +21,7 @@ public class CategoryBean implements RequestMapper<Category> {
     private String description;
     private BigDecimal totalFund;
     private BigDecimal availableFund;
-    private Boolean active;
+    private boolean active = true;
 
 
     @Override

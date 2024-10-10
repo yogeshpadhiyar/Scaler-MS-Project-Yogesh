@@ -15,4 +15,5 @@ public class AppConstant {
     public static final String USER_FUND_NOT_ALLOT = "User fund not allot for id :: ";
     public static final String USER_NOT_FOUND_INTO_FAMILY = "Member not found into given family";
     public static final String CATEGORY_TOTALFUND_GREATERTHAN_AVAILABLEFUND = "User don't have available fund to allocate this category.";
+    public static final String FAMILY_AFFECTED_USERS = "Affected users is :: ";
 }
