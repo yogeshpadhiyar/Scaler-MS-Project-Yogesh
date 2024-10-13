@@ -20,6 +20,12 @@ public class FamilyController {
     @Autowired
     private UserFundService userFundService;
 
+    //get family by family name
+    @GetMapping("/getFamilyByName/{familyName}")
+    public ResponseEntity<FamilyMasterBean> getFamilyByName(@PathVariable String familyName) throws Exception {
+        return ResponseEntity.ok(familyService.readByName(familyName));
+    }
+
     @GetMapping("/{id}")
     public ResponseEntity<FamilyMasterBean> getFamily(@PathVariable Long id) throws Exception {
         return ResponseEntity.ok(familyService.readById(id));

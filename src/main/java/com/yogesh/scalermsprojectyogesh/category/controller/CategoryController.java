@@ -46,7 +46,7 @@ public class CategoryController {
 
     //read all categories by family id
     @GetMapping("/getCategoryByFamilyId/{familyId}")
-    public ResponseEntity<Map<Long,List<CategoryBean>>> getCategoryByFamilyId(@PathVariable Long familyId) throws Exception {
+    public ResponseEntity<Map<String,List<CategoryBean>>> getCategoryByFamilyId(@PathVariable Long familyId) throws Exception {
         return ResponseEntity.ok(categoryService.readByFamilyId(familyId));
     }
 

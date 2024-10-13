@@ -6,7 +6,10 @@ import com.yogesh.scalermsprojectyogesh.category.repository.CategoryRepository;
 import com.yogesh.scalermsprojectyogesh.exception.CategoryModuleException;
 import com.yogesh.scalermsprojectyogesh.exception.CustomUsernameNotFoundException;
 import com.yogesh.scalermsprojectyogesh.exception.UserFundModuleException;
+import com.yogesh.scalermsprojectyogesh.family.model.FamilyMasterBean;
 import com.yogesh.scalermsprojectyogesh.family.model.UserFundBean;
+import com.yogesh.scalermsprojectyogesh.family.model.entity.FamilyMaster;
+import com.yogesh.scalermsprojectyogesh.family.repository.FamilyMasterRepository;
 import com.yogesh.scalermsprojectyogesh.family.repository.UserFundRepository;
 import com.yogesh.scalermsprojectyogesh.service.CrudService;
 import com.yogesh.scalermsprojectyogesh.user.model.entity.UserMaster;
@@ -31,6 +34,8 @@ public class CategoryService implements CrudService<CategoryBean> {
     private UserMasterRepository userMasterRepository;
     @Autowired
     private UserFundRepository userFundRepository;
+    @Autowired
+    private FamilyMasterRepository familyMasterRepository;
 
     @Override
     public CategoryBean create(CategoryBean categoryBean) throws Exception {
@@ -99,13 +104,24 @@ public class CategoryService implements CrudService<CategoryBean> {
         return categoryBeanList;
     }
 
-    public Map<Long,List<CategoryBean>> readByFamilyId(Long familyId) throws Exception{
+    public Map<String,List<CategoryBean>> readByFamilyId(Long familyId) throws Exception{
         List<CategoryBean> familyCategotyList =  categoryRepository.findByFamilyIdAndActive(familyId,true).stream().map(Category::createResponseBean).toList();
-        Map<Long, List<CategoryBean>> userWiseCategoryList = familyCategotyList.stream().collect(Collectors.groupingBy(CategoryBean::getUserId));
+        FamilyMaster familyMaster;
         if(familyCategotyList.isEmpty()){
             throw new CategoryModuleException(AppConstant.CATEGORY_FAMILY_NOT_FOUND_ANY_CATEGORY);
+        }else{
+            familyMaster = familyMasterRepository.findById(familyId).orElseThrow(()-> new CategoryModuleException(AppConstant.FAMILY_ID_NOT_FOUNT+familyId));
         }
-        return userWiseCategoryList;
+        Map<Long, List<CategoryBean>> userWiseCategoryList = familyCategotyList.stream().collect(Collectors.groupingBy(CategoryBean::getUserId));
+        Map<String, List<CategoryBean>> userNameWiseCategoryList = userWiseCategoryList.entrySet().stream().collect(Collectors.toMap(entry->{
+            try {
+                return familyMaster.getUsers().stream().filter(userMaster -> userMaster.getId().equals(entry.getKey())).findFirst().orElseThrow(()-> new CustomUsernameNotFoundException(AppConstant.USERID_NOT_FOUNT+entry.getKey())).getUsername();
+            } catch (CustomUsernameNotFoundException e) {
+                e.printStackTrace();
+            }
+            return null;
+        }, Map.Entry::getValue));
+        return userNameWiseCategoryList;
     }
 
     public CategoryBean addBackCategory(Long id) throws Exception{

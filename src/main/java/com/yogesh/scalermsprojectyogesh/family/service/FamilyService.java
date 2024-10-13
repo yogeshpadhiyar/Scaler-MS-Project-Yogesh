@@ -66,4 +66,8 @@ public class FamilyService implements CrudService<FamilyMasterBean> {
     public String deleteById(Long id) throws Exception {
         throw new HttpRequestMethodNotSupportedException(AppConstant.METHOD_NOT_SUPPORT_EXCEPTION);
     }
+
+    public FamilyMasterBean readByName(String familyName) throws Exception{
+        return familyMasterRepository.findByFamilyName(familyName).orElseThrow(()-> new FamilyModuleException(AppConstant.FAMILY_NAME_NOT_FOUNT+familyName)).createResponseBean();
+    }
 }
