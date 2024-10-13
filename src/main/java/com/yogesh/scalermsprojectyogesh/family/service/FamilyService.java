@@ -63,7 +63,7 @@ public class FamilyService implements CrudService<FamilyMasterBean> {
     }
 
     @Override
-    public void deleteById(Long id) throws Exception {
+    public String deleteById(Long id) throws Exception {
         throw new HttpRequestMethodNotSupportedException(AppConstant.METHOD_NOT_SUPPORT_EXCEPTION);
     }
 }

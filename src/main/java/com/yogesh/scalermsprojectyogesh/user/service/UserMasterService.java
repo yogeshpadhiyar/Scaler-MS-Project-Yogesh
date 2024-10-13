@@ -75,8 +75,10 @@ public class UserMasterService implements CrudService<UserMasterBean> {
     }
 
     @Override
-    public void deleteById(Long id) {
-        userMasterRepository.deleteById(id);
+    public String deleteById(Long id) throws Exception{
+        UserMaster userMaster = userMasterRepository.findById(id).orElseThrow(()-> new CustomUsernameNotFoundException(AppConstant.USERID_NOT_FOUNT+id));
+        userMasterRepository.delete(userMaster);
+        return AppConstant.DELETE_USER;
     }
 
     public UserMasterBean readByUsername(String username) throws CustomUsernameNotFoundException {

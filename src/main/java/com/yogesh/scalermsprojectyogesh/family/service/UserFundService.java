@@ -58,7 +58,7 @@ public class UserFundService implements CrudService<UserFundBean> {
     }
 
     @Override
-    public void deleteById(Long id) throws Exception {
+    public String deleteById(Long id) throws Exception {
         throw new HttpRequestMethodNotSupportedException(AppConstant.METHOD_NOT_SUPPORT_EXCEPTION);
     }
 
@@ -66,8 +66,8 @@ public class UserFundService implements CrudService<UserFundBean> {
         return userFundRepository.findByUserId(userId).orElseThrow(()-> new UserFundModuleException(AppConstant.USER_FUND_NOT_ALLOT+userId)).createResponseBean();
     }
 
-    public String updateAvailableAmountById(UserFundBean userFundBean) throws Exception {
+    public UserFundBean updateAvailableAmountById(UserFundBean userFundBean) throws Exception {
         Integer affectedUsers =  userFundRepository.updateAvailableAmountByUserId(userFundBean.getUserId(), userFundBean.getAvailableAmount());
-        return AppConstant.FAMILY_AFFECTED_USERS+affectedUsers;
+        return userFundRepository.findByUserId(userFundBean.getUserId()).orElseThrow(()-> new UserFundModuleException(AppConstant.USER_FUND_NOT_ALLOT+userFundBean.getUserId())).createResponseBean();
     }
 }

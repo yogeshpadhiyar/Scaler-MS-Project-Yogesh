@@ -60,9 +60,8 @@ public class UserMasterController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<String> deleteUser(@PathVariable Long id) {
-        userMasterService.deleteById(id);
-        return ResponseEntity.ok(AppConstant.DELETE_USER);
+    public ResponseEntity<String> deleteUser(@PathVariable Long id) throws Exception{
+        return ResponseEntity.ok(userMasterService.deleteById(id));
     }
 
     //TODO: User add into family member API
