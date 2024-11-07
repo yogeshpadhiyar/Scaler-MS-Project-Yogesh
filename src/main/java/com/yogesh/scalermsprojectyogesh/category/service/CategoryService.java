@@ -12,6 +12,7 @@ import com.yogesh.scalermsprojectyogesh.family.model.entity.FamilyMaster;
 import com.yogesh.scalermsprojectyogesh.family.repository.FamilyMasterRepository;
 import com.yogesh.scalermsprojectyogesh.family.repository.UserFundRepository;
 import com.yogesh.scalermsprojectyogesh.service.CrudService;
+import com.yogesh.scalermsprojectyogesh.transaction.model.entity.TransactionType;
 import com.yogesh.scalermsprojectyogesh.user.model.entity.UserMaster;
 import com.yogesh.scalermsprojectyogesh.user.repository.UserMasterRepository;
 import com.yogesh.scalermsprojectyogesh.utility.AppConstant;
@@ -37,12 +38,13 @@ public class CategoryService implements CrudService<CategoryBean> {
     @Autowired
     private FamilyMasterRepository familyMasterRepository;
 
+    //TODO: Introduce transaction on each category creation, fund assign and user fund update, delete category and add back category
     @Override
     public CategoryBean create(CategoryBean categoryBean) throws Exception {
         if (categoryBean.getFamilyId() == null) {
             setFamilyIdFromUser(categoryBean);
         }
-        if (categoryBean.getTotalFund() != null) {
+        if (categoryBean.getTotalFund() != null && categoryBean.getTransactionType().equals(TransactionType.CREDIT)) {
             categoryBean.setAvailableFund(categoryBean.getTotalFund());
             updateUserAvailableFund(categoryBean);
         }
@@ -51,20 +53,25 @@ public class CategoryService implements CrudService<CategoryBean> {
         return outputBean;
     }
 
-    private void setFamilyIdFromUser(CategoryBean categoryBean) throws CustomUsernameNotFoundException {
+    public void setFamilyIdFromUser(CategoryBean categoryBean) throws CustomUsernameNotFoundException {
         UserMaster userMaster = userMasterRepository.findById(categoryBean.getUserId())
                 .orElseThrow(() -> new CustomUsernameNotFoundException(AppConstant.USERID_NOT_FOUNT + categoryBean.getUserId()));
         categoryBean.setFamilyId(userMaster.getFamily().getId());
     }
 
-    private void updateUserAvailableFund(CategoryBean categoryBean) throws UserFundModuleException, CategoryModuleException {
+    public void updateUserAvailableFund(CategoryBean categoryBean) throws UserFundModuleException, CategoryModuleException {
         UserFundBean userFundBean = userFundRepository.findByUserId(categoryBean.getUserId())
                 .orElseThrow(() -> new UserFundModuleException(AppConstant.USER_FUND_NOT_ALLOT + categoryBean.getUserId()))
                 .createResponseBean();
-        if (userFundBean.getAvailableAmount().compareTo(categoryBean.getTotalFund()) > 0) {
-            userFundBean.setAvailableAmount(userFundBean.getAvailableAmount().subtract(categoryBean.getTotalFund()));
-        } else {
-            throw new CategoryModuleException(AppConstant.CATEGORY_TOTALFUND_GREATERTHAN_AVAILABLEFUND);
+        if (categoryBean.getTransactionType().equals(TransactionType.DEBIT) ){
+            if ( userFundBean.getAvailableAmount().compareTo(categoryBean.getAvailableFund()) > 0) {
+                userFundBean.setAvailableAmount(userFundBean.getAvailableAmount().subtract(categoryBean.getAvailableFund()));
+            } else {
+                throw new CategoryModuleException(AppConstant.CATEGORY_TOTALFUND_GREATERTHAN_AVAILABLEFUND);
+            }
+        }else if(categoryBean.getTransactionType().equals(TransactionType.CREDIT)){
+            userFundBean.setTotalFundAmount(userFundBean.getTotalFundAmount().add(categoryBean.getTotalFund()));
+            userFundBean.setAvailableAmount(userFundBean.getAvailableAmount().add(categoryBean.getTotalFund()));
         }
         userFundRepository.updateAvailableAmountByUserId(categoryBean.getUserId(), userFundBean.getAvailableAmount());
     }
@@ -77,10 +84,21 @@ public class CategoryService implements CrudService<CategoryBean> {
     @Override
     public CategoryBean update(CategoryBean categoryBean) throws Exception {
         Category category = categoryRepository.findById(categoryBean.getCategoryId()).orElseThrow(()-> new CategoryModuleException(AppConstant.CATEGORY_ID_NOT_FOUNT+categoryBean.getCategoryId()));
-        if(categoryBean.getTotalFund()!=null) {
+
+        if(category.getTotalFund()==null && categoryBean.getTransactionType().equals(TransactionType.CREDIT)) {
             category.setTotalFund(categoryBean.getTotalFund());
             category.setAvailableFund(categoryBean.getTotalFund());
+        }else if (categoryBean.getTransactionType().equals(TransactionType.CREDIT)){
+            category.setTotalFund(category.getTotalFund().add(categoryBean.getTotalFund()));
+            category.setAvailableFund(category.getAvailableFund().add(categoryBean.getTotalFund()));
+        }else if(category.getTotalFund()!=null && categoryBean.getTransactionType().equals(TransactionType.DEBIT)){
+            if(category.getTotalFund().compareTo(categoryBean.getAvailableFund())>0){
+                category.setAvailableFund(category.getAvailableFund().subtract(categoryBean.getAvailableFund()));
+            }else{
+                throw new CategoryModuleException(AppConstant.CATEGORY_TOTALFUND_GREATERTHAN_AVAILABLEFUND);
+            }
         }
+
         updateUserAvailableFund(categoryBean);
         return categoryRepository.save(category).createResponseBean();
     }

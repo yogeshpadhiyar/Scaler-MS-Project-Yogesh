@@ -20,4 +20,9 @@ public class AppConstant {
     public static final String CATEGORY_USER_NOT_FOUND_ANY_CATEGORY = "User not found any category";
     public static final String CATEGORY_FAMILY_NOT_FOUND_ANY_CATEGORY = "Family not found any category";
     public static final String CATEGORY_DELETED_SUCCESSFULLY = "Category has been successfully deleted";
+    public static final String CATEGORY_NOT_ACTIVE = "Category is not active";
+    public static final String USER_NEEDS_APPROVAL = "User needs approval from approver user";
+    public static final String TRANSACTION_NOT_FOUND = "Transaction not found";
+    public static final String TRANSACTION_UPDATE_NOT_ALLOWED = "Transaction update not allowed";
+    public static final String TRANSACTION_DELETE_NOT_ALLOWED = "Transaction delete not allowed";
 }

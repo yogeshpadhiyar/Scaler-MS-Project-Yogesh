@@ -3,6 +3,7 @@ package com.yogesh.scalermsprojectyogesh.category.model;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.yogesh.scalermsprojectyogesh.category.model.entity.Category;
 import com.yogesh.scalermsprojectyogesh.service.RequestMapper;
+import com.yogesh.scalermsprojectyogesh.transaction.model.entity.TransactionType;
 import lombok.Builder;
 import lombok.Data;
 
@@ -22,6 +23,7 @@ public class CategoryBean implements RequestMapper<Category> {
     private BigDecimal totalFund;
     private BigDecimal availableFund;
     private boolean active = true;
+    private TransactionType transactionType;
 
 
     @Override
