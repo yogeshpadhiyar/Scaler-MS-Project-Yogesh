@@ -1,11 +1,10 @@
-package com.yogesh.scalermsprojectyogesh.user.model;
+package com.yogesh.scalermsprojectyogesh.user.model.entity;
 
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.Collection;
-import java.util.List;
 import java.util.stream.Collectors;
 
 public class UserDetailsImpl implements UserDetails {
@@ -16,10 +15,10 @@ public class UserDetailsImpl implements UserDetails {
     private String password;
     private Collection<? extends GrantedAuthority> authorities;
     public UserDetailsImpl(UserMaster user) {
-        this.username=user.getUserName();
+        this.username=user.getUsername();
         this.password=user.getPassword();
         this.authorities= user.getRoles().stream()
-                .map(SimpleGrantedAuthority::new).collect(Collectors.toList());
+                .map(role -> new SimpleGrantedAuthority(role.getRoleName())).collect(Collectors.toList());
     }
 
     @Override
