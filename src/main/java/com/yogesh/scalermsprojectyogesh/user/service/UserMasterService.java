@@ -10,6 +10,7 @@ import com.yogesh.scalermsprojectyogesh.user.repository.RoleRepository;
 import com.yogesh.scalermsprojectyogesh.user.repository.UserMasterRepository;
 import com.yogesh.scalermsprojectyogesh.utility.AppConstant;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
@@ -23,8 +24,8 @@ public class UserMasterService implements CrudService<UserMasterBean> {
     private RoleRepository roleRepository;
     @Autowired
     private FamilyMasterRepository familyMasterRepository;
-//    @Autowired
-//    private PasswordEncoder passwordEncoder;
+    @Autowired
+    private PasswordEncoder passwordEncoder;
 
 
     /*@Override
@@ -58,6 +59,7 @@ public class UserMasterService implements CrudService<UserMasterBean> {
 
         userMaster.setRoles(roleRepository.findAllByRoleNameIn(userMasterBean.getRoles()));
         userMaster.setFamily(familyMaster);
+        userMaster.setPassword(this.passwordEncoder.encode(userMaster.getPassword()));
         return userMasterRepository.save(userMaster).createResponseBean();
     }
 

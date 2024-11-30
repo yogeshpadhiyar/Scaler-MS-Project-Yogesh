@@ -42,6 +42,8 @@ public class UserFundService implements CrudService<UserFundBean> {
         if(userFund.getTotalFundAmount()!=null)     userFund.setAvailableAmount(userFund.getTotalFundAmount());
         userFundBean = userFundRepository.saveAndFlush(userFund).createResponseBean();
         //Decrease family available fund
+        //TODO: future scope to add transaction
+        //TODO: future scope if user is parent of family then only subtract from family otherwise subtract from assigner user.
         familyMaster.setAvailableFamilyFund(familyMaster.getAvailableFamilyFund().subtract(userFundBean.getTotalFundAmount()));
         familyMasterRepository.updateById(familyMaster.getId(),familyMaster.getFamilyFund(), familyMaster.getAvailableFamilyFund());
         return userFundBean;

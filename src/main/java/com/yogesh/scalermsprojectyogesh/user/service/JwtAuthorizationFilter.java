@@ -1,9 +1,8 @@
-/*
 package com.yogesh.scalermsprojectyogesh.user.service;
 
-import com.yogesh.scalermsprojectyogesh.model.ErrorResponse;
 import com.yogesh.scalermsprojectyogesh.utility.JWTTokenUtility;
 import com.yogesh.scalermsprojectyogesh.utility.UtilityFunction;
+import com.yogesh.scalermsprojectyogesh.model.ErrorResponse;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -12,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
@@ -19,9 +19,10 @@ import org.springframework.web.filter.OncePerRequestFilter;
 import java.io.IOException;
 
 @Component
-public class JwtAuthorizationFilter extends OncePerRequestFilter {
+public class JwtAuthenticationFilter extends OncePerRequestFilter {
+
     @Autowired
-    private UserMasterService userMasterService;
+    private UserDetailsService userDetailsService;
     @Autowired
     private JWTTokenUtility jwtTokenUtility;
 
@@ -31,12 +32,12 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
         String token = null;
         String username = null;
         try {
-            if (UtilityFunction.isNullOrEmpty(authToken) && authToken.startsWith("Bearer ")) {
+            if (!UtilityFunction.isNullOrEmpty(authToken) && authToken.startsWith("Bearer ")) {
                 token = authToken.substring(7);
                 username = jwtTokenUtility.extractUsername(token);
             }
-            if (UtilityFunction.isNullOrEmpty(username) && SecurityContextHolder.getContext().getAuthentication() == null) {
-                UserDetails userDetails = userMasterService.loadUserByUsername(username);
+            if (!UtilityFunction.isNullOrEmpty(username) && SecurityContextHolder.getContext().getAuthentication() == null) {
+                UserDetails userDetails = userDetailsService.loadUserByUsername(username);
                 if (jwtTokenUtility.validateToken(token, userDetails)) {
                     UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken
                             = new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
@@ -52,4 +53,3 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
         }
     }
 }
-*/

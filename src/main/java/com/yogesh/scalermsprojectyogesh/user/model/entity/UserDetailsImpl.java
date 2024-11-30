@@ -1,5 +1,4 @@
-/*
-package com.yogesh.scalermsprojectyogesh.user.model;
+package com.yogesh.scalermsprojectyogesh.user.model.entity;
 
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -19,7 +18,7 @@ public class UserDetailsImpl implements UserDetails {
         this.username=user.getUsername();
         this.password=user.getPassword();
         this.authorities= user.getRoles().stream()
-                .map(SimpleGrantedAuthority::new).collect(Collectors.toList());
+                .map(role -> new SimpleGrantedAuthority(role.getRoleName())).collect(Collectors.toList());
     }
 
     @Override
@@ -37,4 +36,3 @@ public class UserDetailsImpl implements UserDetails {
         return this.username;
     }
 }
-*/
